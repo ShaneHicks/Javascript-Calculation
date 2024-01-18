@@ -1,6 +1,6 @@
-# jCalc - JavaScript Calculation Library
+# jsCalc - JavaScript Calculation Library
 
-jCalc (based on jAutoCalc) is a lightweight JavaScript library for performing automatic calculations based on input values in a web page. This library is designed to replace the functionality of a jQuery-based script, providing a modern and dependency-free alternative.
+jsCalc (based on jAutoCalc) is a lightweight JavaScript library for performing automatic calculations based on input values in a web page. This library is designed to replace the functionality of a jQuery-based script, providing a modern and dependency-free alternative.
 
 ## Features
 
@@ -12,20 +12,20 @@ jCalc (based on jAutoCalc) is a lightweight JavaScript library for performing au
 
 ## Usage
 
-1. Include the jCalc script in your HTML file:
+1. Include the jsCalc script in your HTML file:
 
    ```html
-   <script src="path/to/jCalc.js"></script>
+   <script src="path/to/jsCalc.js"></script>
 
-2. Add the jCalc attribute to the HTML elements where you want automatic calculations:
+2. Add the jsCalc attribute to the HTML elements where you want automatic calculations:
    
    ```html
-   <input type="text" name="field1" jCalc="sum({field2} * 2)">
+   <input type="text" name="field1" jsCalc="sum({field2} * 2)">
    <input type="text" name="field2">
 
-3. Initialize jCalc in your JavaScript:
+3. Initialize jsCalc in your JavaScript:
    
   ```html
    document.addEventListener('DOMContentLoaded', function () {
-     document.querySelector('body').jCalc();
+     document.querySelector('body').jsCalc();
    });
