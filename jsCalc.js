@@ -193,4 +193,157 @@
 
     const evalStack = [];
 
-    for (let i =
+    for (let i = 0; i < output.length; i++) {
+      const token = output[i];
+
+      if (typeof token === "number") {
+        evalStack.push(token);
+      } else if (token in operators) {
+        const b = evalStack.pop();
+        const a = evalStack.pop();
+        evalStack.push(operators[token].exec(a, b));
+      }
+    }
+
+    return evalStack[0];
+  }
+
+  function formatValue(value, opts) {
+    let formattedValue = value.toFixed(opts.decimalPlaces);
+
+    if (opts.thousandOpts.includes(",")) {
+      formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, opts.thousandOpts[0]);
+    }
+
+    if (opts.decimalOpts.includes(",")) {
+      formattedValue = formattedValue.replace(".", opts.decimalOpts[0]);
+    }
+
+    return formattedValue;
+  }
+
+  function init(equation, opts, vars, funcs) {
+    const attribute = opts.attribute;
+    const context = this;
+
+    $(`[${attribute}]:not([${d}])`, context).each(function () {
+      const result = $(this);
+      const equationString = result.attr(attribute);
+      const equationFields = parseEquationFields(equationString);
+      if (equationFields.length === 0) {
+        return;
+      }
+
+      if (keyEventsFire) {
+        p += " keyup keydown keypress";
+      }
+
+      for (let i = 0; i < equationFields.length; i++) {
+        const field = equationFields[i];
+        if (i === 0 && initFire) {
+          $(`[name="${field.fieldName}"]`, context).on(p, { equation: equationString, equationFields: equationFields, result: result, context: context, opts: opts, vars: vars, funcs: funcs }, function (e) {
+            calculate(e.data.equation, e.data.equationFields, e.data.result, e.data.context, e.data.opts, e.data.vars, e.data.funcs);
+          });
+        } else {
+          const fieldSelector = `[name="${field.fieldName}"]`;
+          if ($(fieldSelector, context).length === 0) {
+            return;
+          }
+        }
+      }
+
+      if (readOnlyResults) {
+        result.attr("readonly", "readonly");
+      }
+
+      result.attr(d, d);
+
+      if (initFire) {
+        $(`[name="${equationFields[0].fieldName}"]`, context).trigger("change");
+      }
+    });
+  }
+
+  function parseEquationFields(equation) {
+    const regex = /{([^}]+)}/gi;
+    const equationFields = [];
+    let match;
+
+    while ((match = regex.exec(equation)) !== null) {
+      const fieldName = match[1];
+      equationFields.push({ eqName: fieldName, fieldName: fieldName, reactive: true });
+    }
+
+    return equationFields;
+  }
+
+  function destroy(attribute) {
+    const context = this;
+
+    $(`[${attribute}][${d}]`, context).each(function () {
+      const result = $(this);
+      const equationString = result.attr(attribute);
+      const equationFields = parseEquationFields(equationString);
+
+      if (equationFields.length === 0) {
+        return;
+      }
+
+      for (let i = 0; i < equationFields.length; i++) {
+        const field = equationFields[i];
+        $(`[name="${field.fieldName}"]`, context).off(".jautocalc");
+      }
+
+      if (readOnlyResults) {
+        result.removeAttr("readonly");
+      }
+
+      result.removeAttr(d);
+    });
+  }
+
+  r().fn.jAutoCalc = function () {
+    let action = "init";
+    let options = r().extend({}, r().fn.jAutoCalc.defaults);
+    const funcs = {};
+    const vars = {};
+
+    for (let i = 0; i < arguments.length; i++) {
+      const arg = arguments[i];
+
+      if (typeof arg === "string") {
+        action = arg.toString();
+      } else if (typeof arg === "object") {
+        options = r().extend(options, arg);
+      }
+    }
+
+    const methods = {
+      init: init,
+      destroy: destroy
+    };
+
+    if (methods[action]) {
+      methods[action].apply(this, [options, vars, funcs]);
+    } else {
+      init.apply(this, [options, vars, funcs]);
+    }
+  };
+
+  r().fn.jAutoCalc.defaults = {
+    attribute: "jAutoCalc",
+    thousandOpts: [",", ".", " "],
+    decimalOpts: [".", ","],
+    decimalPlaces: decimalPlaces,
+    initFire: initFire,
+    chainFire: chainFire,
+    keyEventsFire: keyEventsFire,
+    readOnlyResults: readOnlyResults,
+    showParseError: showParseError,
+    emptyAsZero: emptyAsZero,
+    smartIntegers: smartIntegers,
+    onShowResult: onShowResult,
+    funcs: funcs,
+    vars: vars
+  };
+})();
