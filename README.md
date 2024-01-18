@@ -1,6 +1,6 @@
 # jCalc - JavaScript Calculation Library
 
-jCalc is a lightweight JavaScript library for performing automatic calculations based on input values in a web page. This library is designed to replace the functionality of a jQuery-based script, providing a modern and dependency-free alternative.
+jCalc (based on jAutoCalc) is a lightweight JavaScript library for performing automatic calculations based on input values in a web page. This library is designed to replace the functionality of a jQuery-based script, providing a modern and dependency-free alternative.
 
 ## Features
 
