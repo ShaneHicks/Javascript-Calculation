@@ -18,11 +18,13 @@ jCalc (based on jAutoCalc) is a lightweight JavaScript library for performing au
    <script src="path/to/jCalc.js"></script>
 
 2. Add the jCalc attribute to the HTML elements where you want automatic calculations:
+   
    ```html
    <input type="text" name="field1" jCalc="sum({field2} * 2)">
    <input type="text" name="field2">
 
 3. Initialize jCalc in your JavaScript:
+   
   ```html
    document.addEventListener('DOMContentLoaded', function () {
      document.querySelector('body').jCalc();
